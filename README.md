@@ -32,15 +32,20 @@ For visual guidance, see this YouTube tutorial:
 ▶️ PostgreSQL Installation Guide
 
 ✅ Set Up the Database
-Once PostgreSQL is installed, open a terminal and run: createdb ctu_db
+Once PostgreSQL is installed, open a terminal and run:
+<details> createdb ctu_db </details>
+
 This will create a new database named ctu_db.
 ********************************************
 📦 .env Template
 Create a .env in the root folder:
+
 --Paste this
+<details>
 spring.datasource.url=jdbc:postgresql://localhost:5432/ctu_db
 spring.datasource.username=hi
 spring.datasource.password=JBalbon
 spring.datasource.driver-class-name=org.postgresql.Driver
+</details>
 
 
