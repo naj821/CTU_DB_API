@@ -43,8 +43,11 @@ Create a .env in the root folder:
 --Paste this
 <details>
 spring.datasource.url=jdbc:postgresql://localhost:5432/ctu_db
-spring.datasource.username=hi
-spring.datasource.password=JBalbon
+  
+spring.datasource.username={yourusername}
+
+spring.datasource.password={yourpassword}
+
 spring.datasource.driver-class-name=org.postgresql.Driver
 </details>
 
