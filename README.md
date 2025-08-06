@@ -22,6 +22,7 @@ Find and select the Path variable, then click Edit
 
 Click New and add: %JAVA_HOME%\bin
 
+</details>
 *******************************************
 ✅ Install PostgreSQL
 Download PostgreSQL from:
