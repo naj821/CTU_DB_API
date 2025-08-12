@@ -15,8 +15,8 @@ CREATE TABLE users (
 INSERT INTO users (email, password, role)
 VALUES (
     'admin@admin.com',
-    '$2a$10$CwTycUXWue0Thq9StjUM0uJ8Jx2RHTGZ7YIRReHVxo.qv4D6aJZby', -- bcrypt hash of 'admin123'
-    'ADMIN'
+    '$2a$12$K75kj0.ishsQMUg7CWfVm.rABvSSsjD/eFvAVkwBDu5to18Vi.YA6', -- bcrypt hash of 'admin123'
+    'ADMIN'::ROLE_ENUM
 );
 
 CREATE TABLE profiles (
