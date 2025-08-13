@@ -2,9 +2,9 @@ package com.kapston.CTU_DB_API.utility
 
 import jakarta.servlet.http.Cookie
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 
-@Service
+@Component
 class CookieUtils(
     @Value("\${cookie.max-age-seconds}") private val cookieMaxAge: Int
 ) {
