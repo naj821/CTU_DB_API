@@ -2,20 +2,23 @@ CREATE TYPE ROLE_ENUM AS ENUM ('ADMIN', 'TEACHER', 'STUDENT');
 CREATE TYPE GENDER_ENUM AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE SEMESTER_ENUM AS ENUM ('1ST', '2ND', '3RD', '4TH');
 CREATE TYPE GRADING_PERIOD_ENUM AS ENUM ('1ST', '2ND', '3RD', '4TH');
+CREATE SEQUENCE membership_seq START 1;
 
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
+    membership_code TEXT UNIQUE DEFAULT 'ASM-' || LPAD(nextval('membership_seq')::text, 4, '0'),
     role ROLE_ENUM,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-INSERT INTO users (email, password, role)
+INSERT INTO users (email, password, membership_code, role)
 VALUES (
     'admin@admin.com',
     '$2a$12$K75kj0.ishsQMUg7CWfVm.rABvSSsjD/eFvAVkwBDu5to18Vi.YA6', -- bcrypt hash of 'admin123'
+    'ASM-0000',
     'ADMIN'::ROLE_ENUM
 );
 

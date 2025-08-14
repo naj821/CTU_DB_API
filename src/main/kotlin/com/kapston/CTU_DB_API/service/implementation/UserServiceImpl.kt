@@ -4,12 +4,14 @@ import com.kapston.CTU_DB_API.domain.dto.request.LoginRequest
 import com.kapston.CTU_DB_API.domain.dto.request.RegisterRequest
 import com.kapston.CTU_DB_API.domain.dto.request.TokenRequest
 import com.kapston.CTU_DB_API.domain.dto.response.LoginResponse
+import com.kapston.CTU_DB_API.domain.entity.UserEntity
 import com.kapston.CTU_DB_API.repository.UserRepository
 import com.kapston.CTU_DB_API.service.abstraction.UserService
 import com.kapston.CTU_DB_API.utility.HashUtils.verifyPassword
 import com.kapston.CTU_DB_API.utility.JwtUtils
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class UserServiceImpl(
@@ -19,7 +21,7 @@ class UserServiceImpl(
 
         val userExists = userRepo.existsByEmail(user.email)
 
-        if(userExists) throw Exception("Email already exists.")
+        if(userExists) throw IllegalStateException("Email already exists.")
 
         userRepo.save(user.toEntity())
 
@@ -49,6 +51,10 @@ class UserServiceImpl(
             userResponse = authUser.toResponse(),
             authorization = authToken
         )
+    }
 
+    override fun getUserEntity(id: UUID): UserEntity {
+        return userRepo.findById(id)
+            .orElseThrow { IllegalArgumentException("You must be authenticated.") }
     }
 }

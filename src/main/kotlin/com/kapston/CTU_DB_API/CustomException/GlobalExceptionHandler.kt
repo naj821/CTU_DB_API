@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception::class)
-    fun handleUserAlreadyExists(ex: Exception): ResponseEntity<GlobalExceptionModel> {
+    fun handleUserAlreadyExists(ex: IllegalStateException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(
-            ex.message
+            ex.message ?: "Unexpected runtime error"
         )
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response)
@@ -21,9 +21,25 @@ class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException::class)
     fun handleInvalidCredentials(ex: BadCredentialsException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(
-            ex.message
+            ex.message ?: "Unexpected runtime error"
         )
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+    }
+
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(ex: RuntimeException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleRuntimeException(ex: IllegalArgumentException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
     }
 }
