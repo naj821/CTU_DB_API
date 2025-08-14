@@ -2,11 +2,10 @@ package com.kapston.CTU_DB_API.domain.entity
 
 import com.kapston.CTU_DB_API.domain.Enums.Role
 import com.kapston.CTU_DB_API.domain.dto.response.LoginResponse
-import com.kapston.CTU_DB_API.utility.RoleEnumConverter
+import com.kapston.CTU_DB_API.domain.dto.response.UserResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 import java.util.*
@@ -40,5 +39,5 @@ data class UserEntity(
 )
 
 {
-    fun toResponse(): LoginResponse = LoginResponse(email = email, role = role, id = id!!)
+    fun toResponse(): UserResponse = UserResponse(email = email, role = role, id = id!!)
 }
