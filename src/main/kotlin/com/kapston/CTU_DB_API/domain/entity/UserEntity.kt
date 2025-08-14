@@ -1,7 +1,6 @@
 package com.kapston.CTU_DB_API.domain.entity
 
 import com.kapston.CTU_DB_API.domain.Enums.Role
-import com.kapston.CTU_DB_API.domain.dto.response.LoginResponse
 import com.kapston.CTU_DB_API.domain.dto.response.UserResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnTransformer
@@ -12,13 +11,16 @@ import java.util.*
 
 @Entity
 @Table(name = "users")
-data class UserEntity(
+class UserEntity(
 
     @Column(nullable = false, unique = true)
-    val email: String,
+    val email: String = "",
 
     @Column(nullable = false)
-    val password: String,
+    val password: String = "",
+
+    @Column(name = "membership_code", insertable = false, updatable = false)
+    val membershipCode: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -39,5 +41,10 @@ data class UserEntity(
 )
 
 {
-    fun toResponse(): UserResponse = UserResponse(email = email, role = role, id = id!!)
+    fun toResponse(): UserResponse = UserResponse(
+        email = email,
+        membershipCode = membershipCode!!,
+        role = role,
+        id = id!!
+    )
 }

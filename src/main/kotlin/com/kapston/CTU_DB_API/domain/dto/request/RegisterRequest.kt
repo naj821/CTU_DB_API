@@ -10,5 +10,10 @@ data class RegisterRequest(
 )
 
 {
-    fun toEntity(): UserEntity = UserEntity(email = email, password = password, role = role)
+    fun toEntity(): UserEntity =
+        UserEntity(
+            email = email,
+            password = password,
+            role = role
+        )
 }
