@@ -17,7 +17,17 @@ class ProfileServiceImplementation(
 
     override fun saveOrUpdate(profileEntity: ProfileEntity): String {
         try {
-            profileRepository.save(profileEntity)
+            val existingProfile = profileRepository.findByUserEntity(profileEntity.userEntity)
+            val updateProfile = existingProfile?.apply {
+                firstName = profileEntity.firstName
+                middleName = profileEntity.middleName
+                lastName = profileEntity.lastName
+                gender = profileEntity.gender
+                birthDate = profileEntity.birthDate
+                contactNumber = profileEntity.contactNumber
+                address = profileEntity.address
+            } ?: profileEntity
+            profileRepository.save(updateProfile)
 
             return "Profile saved."
         } catch (e: DataAccessException) {
