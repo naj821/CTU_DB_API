@@ -2,6 +2,7 @@ package com.kapston.CTU_DB_API.repository
 
 import com.kapston.CTU_DB_API.domain.Enums.Role
 import com.kapston.CTU_DB_API.domain.entity.ProfileEntity
+import com.kapston.CTU_DB_API.domain.entity.UserEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -24,4 +25,5 @@ interface ProfileRepository: JpaRepository<ProfileEntity, UUID> {
     """
     )
     fun search(role: Role?, name: String?, pageable: Pageable): Page<ProfileEntity>
+    fun findByUserEntity(user: UserEntity): ProfileEntity?
 }
