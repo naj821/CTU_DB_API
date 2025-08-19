@@ -24,7 +24,6 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @ColumnTransformer(write = "?::ROLE_ENUM")
     val role: Role = Role.STUDENT,
 
     @Id
