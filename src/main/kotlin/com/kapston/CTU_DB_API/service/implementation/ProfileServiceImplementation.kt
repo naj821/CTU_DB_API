@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class ProfileServiceImplementation(
@@ -18,15 +19,23 @@ class ProfileServiceImplementation(
     override fun saveOrUpdate(profileEntity: ProfileEntity): String {
         try {
             val existingProfile = profileRepository.findByUserEntity(profileEntity.userEntity)
-            val updateProfile = existingProfile?.apply {
-                firstName = profileEntity.firstName
-                middleName = profileEntity.middleName
-                lastName = profileEntity.lastName
-                gender = profileEntity.gender
-                birthDate = profileEntity.birthDate
-                contactNumber = profileEntity.contactNumber
-                address = profileEntity.address
-            } ?: profileEntity
+            val updateProfile = if(existingProfile != null) {
+                ProfileEntity(
+                    id = existingProfile.id,
+                    userEntity = existingProfile.userEntity,
+                    firstName = profileEntity.firstName.takeIf { !it.isNotBlank() } ?: existingProfile.firstName,
+                    middleName = profileEntity.middleName.takeIf { !it.isNullOrBlank() } ?: existingProfile.middleName,
+                    lastName = profileEntity.lastName.takeIf { !it.isNotBlank() } ?: existingProfile.lastName,
+                    gender = profileEntity.gender ?: existingProfile.gender,
+                    birthDate = profileEntity.birthDate ?: existingProfile.birthDate,
+                    contactNumber = profileEntity.contactNumber.takeIf { !it.isNullOrBlank() } ?: existingProfile.contactNumber,
+                    address = profileEntity.address.takeIf { !it.isNullOrBlank() } ?: existingProfile.address,
+                    createdAt = existingProfile.createdAt,
+                    updatedAt = LocalDateTime.now(),
+                )
+            } else {
+                profileEntity
+            }
             profileRepository.save(updateProfile)
 
             return "Profile saved."
