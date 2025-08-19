@@ -27,7 +27,6 @@ class ProfileEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    @ColumnTransformer(write = "?::GENDER_ENUM")
     var gender: Gender? = null,
 
     @Column(name = "birth_date")

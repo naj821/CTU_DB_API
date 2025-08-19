@@ -1,7 +1,3 @@
-CREATE TYPE ROLE_ENUM AS ENUM ('ADMIN', 'TEACHER', 'STUDENT');
-CREATE TYPE GENDER_ENUM AS ENUM ('MALE', 'FEMALE', 'OTHER');
-CREATE TYPE SEMESTER_ENUM AS ENUM ('1ST', '2ND', '3RD', '4TH');
-CREATE TYPE GRADING_PERIOD_ENUM AS ENUM ('1ST', '2ND', '3RD', '4TH');
 CREATE SEQUENCE membership_seq START 1;
 
 CREATE TABLE users (
@@ -9,7 +5,7 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     membership_code TEXT UNIQUE DEFAULT 'ASM-' || LPAD(nextval('membership_seq')::text, 4, '0'),
-    role ROLE_ENUM,
+    role TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -19,7 +15,7 @@ VALUES (
     'admin@admin.com',
     '$2a$12$K75kj0.ishsQMUg7CWfVm.rABvSSsjD/eFvAVkwBDu5to18Vi.YA6', -- bcrypt hash of 'admin123'
     'ASM-0000',
-    'ADMIN'::ROLE_ENUM
+    'ADMIN'
 );
 
 CREATE TABLE profiles (
@@ -28,7 +24,7 @@ CREATE TABLE profiles (
     first_name TEXT NOT NULL,
     middle_name TEXT,
     last_name TEXT NOT NULL,
-    gender GENDER_ENUM,
+    gender TEXT,
     birth_date DATE,
     contact_number TEXT,
     address TEXT,
@@ -71,7 +67,7 @@ CREATE TABLE class_enrollments (
     section_id UUID NOT NULL REFERENCES sections(id) ON DELETE CASCADE,
     enrolled_at TIMESTAMPTZ DEFAULT now(),
     school_year TEXT,
-    semester SEMESTER_ENUM,
+    semester TEXT,
     UNIQUE(student_id, section_id)
 );
 
@@ -94,7 +90,7 @@ CREATE TABLE grades (
     teacher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     grade NUMERIC(5,2) NOT NULL CHECK (grade >= 0 AND grade <= 100),
     remarks TEXT,
-    period GRADING_PERIOD_ENUM,
+    period TEXT,
     graded_at TIMESTAMPTZ DEFAULT now(),
     UNIQUE(student_id, subject_id, period)
 );
