@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.UUID
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ProfileServiceImplementation(
@@ -42,6 +44,10 @@ class ProfileServiceImplementation(
         } catch (e: DataAccessException) {
             throw RuntimeException("Failed to save profile.")
         }
+    }
+
+    override fun getProfile(id: UUID): ProfileEntity? {
+        return profileRepository.findById(id).getOrNull()
     }
 
     override fun search(role: Role?, name: String?, page: Int, size: Int): Page<ProfileEntity> {
