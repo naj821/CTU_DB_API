@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,15 +23,28 @@ import java.util.UUID
 
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/profiles")
 class ProfileController(
     private val profileService: ProfileService,
     private val userService: UserService,
     private val authenticationServiceImplementation: AuthenticationServiceImplementation,
     private val jwtUtils: JwtUtils
 ) {
-    @PostMapping("/profile")
-    fun saveOrUpdate(
+    @GetMapping("/me")
+    fun getProfiles(
+        @CookieValue("jwt") jwt: String
+    ): ResponseEntity<ProfileEntity?> {
+        authenticationServiceImplementation.validateAccessToken(jwt)
+        val stringId = jwtUtils.getUserIdFromToken(jwt)
+        val uuidId = UUID.fromString(stringId)
+
+       val response =  profileService.getProfile(uuidId)
+
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
+
+    @PostMapping
+    fun save(
         @Valid @RequestBody profileRequest: ProfileRequest,
         @CookieValue("jwt") jwt: String
     ): ResponseEntity<String> {
@@ -44,7 +58,23 @@ class ProfileController(
         return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse)
     }
 
-    @GetMapping("/profiles")
+    @PutMapping("/{id}")
+    fun update(
+        @Valid @RequestBody profileRequest: ProfileRequest,
+        @CookieValue("jwt") jwt: String
+    ): ResponseEntity<String> {
+
+        val stringId = jwtUtils.getUserIdFromToken(jwt)
+        val userId = UUID.fromString(stringId)
+
+        val user = userService.getUserEntity(userId)
+        val profileResponse = profileService.saveOrUpdate(profileRequest.toEntity(user))
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(profileResponse)
+    }
+
+
+    @GetMapping
     fun searchProfiles(
         @RequestParam(required = false) role: Role?,
         @RequestParam(required = false) name: String?,
