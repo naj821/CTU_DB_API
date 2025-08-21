@@ -39,7 +39,7 @@ CREATE TABLE sections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL UNIQUE,
     grade_level TEXT NOT NULL,
-    adviser_id UUID NOT NULL REFERENCES users(id),
+    adviser_id UUID NOT NULL REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
