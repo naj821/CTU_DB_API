@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.service.implementation
 
+import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
 import com.kapston.CTU_DB_API.domain.dto.request.LoginRequest
 import com.kapston.CTU_DB_API.domain.dto.request.RegisterRequest
 import com.kapston.CTU_DB_API.domain.dto.request.TokenRequest
@@ -55,6 +56,6 @@ class UserServiceImpl(
 
     override fun getUserEntity(id: UUID): UserEntity {
         return userRepo.findById(id)
-            .orElseThrow { IllegalArgumentException("You must be authenticated.") }
+            .orElseThrow { UserNotFoundException("No user found.") }
     }
 }

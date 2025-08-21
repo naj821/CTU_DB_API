@@ -43,7 +43,6 @@ class ProfileEntity(
     val id: UUID? = null,
 
     @OneToOne(cascade = [CascadeType.REMOVE])
-    @MapsId
     @JoinColumn(name = "user_id")
     val userEntity: UserEntity = UserEntity(),
 

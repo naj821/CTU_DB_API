@@ -1,5 +1,5 @@
 package com.kapston.CTU_DB_API.CustomException
 
-class GlobalExceptionModel(
+data class GlobalExceptionModel(
     var message: String?
 )

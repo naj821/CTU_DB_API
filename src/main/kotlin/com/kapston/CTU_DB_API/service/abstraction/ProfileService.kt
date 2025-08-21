@@ -9,4 +9,5 @@ interface ProfileService {
     fun saveOrUpdate(profileEntity: ProfileEntity): String
     fun getProfile(id: UUID): ProfileEntity?
     fun search(role: Role?, name: String?, page: Int, size: Int): Page<ProfileEntity>
+    fun findName(name: String): ProfileEntity?
 }

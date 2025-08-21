@@ -4,7 +4,6 @@ import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.util.*
 
 @Entity
@@ -19,7 +18,7 @@ class SectionEntity(
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adviser_id", nullable = false, unique = true)
-    val adviser: UserEntity,
+    val adviser: ProfileEntity,
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

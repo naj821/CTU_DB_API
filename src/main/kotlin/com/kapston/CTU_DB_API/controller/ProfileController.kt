@@ -48,6 +48,7 @@ class ProfileController(
         @Valid @RequestBody profileRequest: ProfileRequest,
         @CookieValue("jwt") jwt: String
     ): ResponseEntity<String> {
+        authenticationServiceImplementation.validateAccessToken(jwt)
 
         val stringId = jwtUtils.getUserIdFromToken(jwt)
         val userId = UUID.fromString(stringId)
@@ -63,6 +64,7 @@ class ProfileController(
         @Valid @RequestBody profileRequest: ProfileRequest,
         @CookieValue("jwt") jwt: String
     ): ResponseEntity<String> {
+        authenticationServiceImplementation.validateAccessToken(jwt)
 
         val stringId = jwtUtils.getUserIdFromToken(jwt)
         val userId = UUID.fromString(stringId)

@@ -26,4 +26,16 @@ interface ProfileRepository: JpaRepository<ProfileEntity, UUID> {
     )
     fun search(role: Role?, name: String?, pageable: Pageable): Page<ProfileEntity>
     fun findByUserEntity(user: UserEntity): ProfileEntity?
+
+    @Query(
+        """
+    SELECT p
+    FROM ProfileEntity p
+    WHERE LOWER(CONCAT(p.firstName, ' ', p.middleName, ' ', p.lastName)) = LOWER(:name)
+       OR LOWER(CONCAT(p.firstName, ' ', p.lastName)) = LOWER(:name)
+       OR LOWER(p.firstName) = LOWER(:name)
+       OR LOWER(p.lastName) = LOWER(:name)
+    """
+    )
+    fun findByName(name: String): ProfileEntity?
 }

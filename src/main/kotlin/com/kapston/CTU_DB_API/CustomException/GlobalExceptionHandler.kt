@@ -42,4 +42,20 @@ class GlobalExceptionHandler {
         )
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
     }
+
+    @ExceptionHandler(SectionAlreadyExistsException::class)
+    fun handleSectionAlreadyExistsException(ex: SectionAlreadyExistsException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response)
+    }
+
+    @ExceptionHandler(ProfileNotFoundException::class)
+    fun handleProfileNotFoundException(ex: ProfileNotFoundException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
 }

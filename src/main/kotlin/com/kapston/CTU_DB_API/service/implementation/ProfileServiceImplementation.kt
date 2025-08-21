@@ -1,5 +1,7 @@
 package com.kapston.CTU_DB_API.service.implementation
 
+import com.kapston.CTU_DB_API.CustomException.ProfileNotFoundException
+import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
 import com.kapston.CTU_DB_API.domain.Enums.Role
 import com.kapston.CTU_DB_API.domain.dto.request.ProfileRequest
 import com.kapston.CTU_DB_API.domain.entity.ProfileEntity
@@ -47,12 +49,19 @@ class ProfileServiceImplementation(
     }
 
     override fun getProfile(id: UUID): ProfileEntity? {
-        return profileRepository.findById(id).getOrNull()
+        return profileRepository.findById(id)
+            .orElseThrow { ProfileNotFoundException("No profile found.") }
+
     }
 
     override fun search(role: Role?, name: String?, page: Int, size: Int): Page<ProfileEntity> {
         val page = PageRequest.of(page, size)
 
         return profileRepository.search(role, name, page)
+    }
+
+    override fun findName(name: String): ProfileEntity? {
+        return profileRepository.findByName(name)
+            ?: throw UserNotFoundException("User with name $name not found.")
     }
 }
