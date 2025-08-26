@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception::class)
-    fun handleUserAlreadyExists(ex: IllegalStateException): ResponseEntity<GlobalExceptionModel> {
+    @ExceptionHandler(UserAlreadyExistsException::class)
+    fun handleUserAlreadyExists(ex: UserAlreadyExistsException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(
             ex.message ?: "Unexpected runtime error"
         )

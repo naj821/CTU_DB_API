@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.utility
 
+import com.kapston.CTU_DB_API.CustomException.UnauthorizedException
 import com.kapston.CTU_DB_API.service.abstraction.AuthenticationService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -26,17 +27,20 @@ class JwtAuthenticationFilter(
                 ?.takeIf {
                     SecurityContextHolder.getContext().authentication == null }
                 ?.let { authenticationService.validateAccessToken(it)
+
                     val authToken = UsernamePasswordAuthenticationToken(
                         it,
                         null,
                         emptyList()
                     )
+
                     authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+
                     SecurityContextHolder.getContext().authentication = authToken
+
                 }
-
-        } catch (e: Exception) {
-
+        } catch (e: UnauthorizedException) {
+            throw e
         }
         filterChain.doFilter(request, response)
     }
