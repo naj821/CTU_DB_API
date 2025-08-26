@@ -53,6 +53,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/api/auth/session").permitAll()
+//                    .requestMatchers(HttpMethod.GET, "/api/profiles").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

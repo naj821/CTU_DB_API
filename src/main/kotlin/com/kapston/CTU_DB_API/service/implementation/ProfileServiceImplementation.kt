@@ -5,6 +5,7 @@ import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
 import com.kapston.CTU_DB_API.domain.Enums.Role
 import com.kapston.CTU_DB_API.domain.dto.request.ProfileRequest
 import com.kapston.CTU_DB_API.domain.entity.ProfileEntity
+import com.kapston.CTU_DB_API.domain.entity.UserEntity
 import com.kapston.CTU_DB_API.repository.ProfileRepository
 import com.kapston.CTU_DB_API.service.abstraction.ProfileService
 import org.springframework.dao.DataAccessException
@@ -48,9 +49,9 @@ class ProfileServiceImplementation(
         }
     }
 
-    override fun getProfile(id: UUID): ProfileEntity? {
-        return profileRepository.findById(id)
-            .orElseThrow { ProfileNotFoundException("No profile found.") }
+    override fun getProfile(userEntity: UserEntity): ProfileEntity? {
+        return profileRepository.findByUserEntity(userEntity)
+            ?: throw ProfileNotFoundException("Profile not found for user id=${userEntity.id}")
 
     }
 
@@ -63,5 +64,9 @@ class ProfileServiceImplementation(
     override fun findName(name: String): ProfileEntity? {
         return profileRepository.findByName(name)
             ?: throw UserNotFoundException("User with name $name not found.")
+    }
+
+    override fun getAllTeachers(): List<ProfileEntity> {
+        return profileRepository.findAllTeachers()
     }
 }

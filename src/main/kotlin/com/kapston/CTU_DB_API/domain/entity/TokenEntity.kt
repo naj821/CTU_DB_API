@@ -20,7 +20,7 @@ class TokenEntity (
     @SequenceGenerator(name = "token_id_seq", sequenceName = "token_id_seq", allocationSize = 1)
     var id: Int? = null,
     @Column(name = "user_id")
-    var userId: UUID? = null,
+    var userId: UUID,
     @Column(name ="hashed_access_token")
     var hashedAccessToken: String = "",
     @Column(name ="hashed_refresh_token")
@@ -29,3 +29,14 @@ class TokenEntity (
     @CreationTimestamp
     var createdAt: LocalDateTime? = null
 )
+{
+    fun copy(
+        id: Int? = this.id,
+        userId: UUID = this.userId,
+        hashedAccessToken: String = this.hashedAccessToken,
+        hashedRefreshToken: String = this.hashedRefreshToken,
+        createdAt: LocalDateTime? = this.createdAt
+    ): TokenEntity {
+        return TokenEntity(id, userId, hashedAccessToken, hashedRefreshToken, createdAt)
+    }
+}

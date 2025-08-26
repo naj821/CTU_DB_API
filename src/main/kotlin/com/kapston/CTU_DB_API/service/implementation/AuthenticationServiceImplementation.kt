@@ -1,11 +1,13 @@
 package com.kapston.CTU_DB_API.service.implementation
 
+import com.kapston.CTU_DB_API.CustomException.UnauthorizedException
 import com.kapston.CTU_DB_API.domain.entity.TokenEntity
 import com.kapston.CTU_DB_API.repository.TokenRepository
 import com.kapston.CTU_DB_API.service.abstraction.AuthenticationService
 import com.kapston.CTU_DB_API.utility.JwtUtils
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class AuthenticationServiceImplementation(
@@ -13,14 +15,13 @@ class AuthenticationServiceImplementation(
     private val tokenRepository: TokenRepository
 ): AuthenticationService {
     override fun saveTokens(token: TokenEntity): Unit {
-        val doesExist = tokenRepository.existsByHashedAccessTokenAndHashedRefreshToken(
-            hashedAccessToken = token.hashedAccessToken,
-            hashedRefreshToken = token.hashedRefreshToken
+        val doesExist = tokenRepository.existsByUserId(
+            token.userId
         )
 
         if(doesExist) throw IllegalArgumentException("You are already logged in.")
 
-        tokenRepository.saveAndFlush(token)
+        tokenRepository.save(token)
         return
     }
 
@@ -31,33 +32,42 @@ class AuthenticationServiceImplementation(
 
     @Transactional
     override fun refresh(jwt: String): String {
-        try {
-            val session = tokenRepository.existsByHashedAccessToken(jwt)
-            if(!session) throw IllegalArgumentException("Invalid token.")
+        val tokenData = tokenRepository.findByHashedAccessToken(jwt)
+        val refreshToken = tokenData?.hashedRefreshToken
 
-            val tokenData = tokenRepository.findByHashedAccessToken(token = jwt)
-            val accessToken = tokenData.hashedAccessToken
-            val refreshToken = tokenData.hashedRefreshToken
-
-            val validAccessToken = jwtUtils.validateAccessToken(accessToken)
-            if(validAccessToken) return accessToken
-
-            val validRefreshToken = jwtUtils.validateRefreshToken(refreshToken)
-            if(!validRefreshToken) throw IllegalArgumentException("You are not logged in.")
-
-            val newAccessToken = jwtUtils.generateAccessToken(tokenData.userId.toString())
-            val tokenEntity = TokenEntity(
-                id = tokenData.id,
-                userId = tokenData.userId,
-                hashedAccessToken = newAccessToken,
-                hashedRefreshToken = refreshToken,
-                createdAt = tokenData.createdAt
+        tokenData.takeIf { it != null }?.let { token ->
+            val newAccessToken = jwtUtils.generateAccessToken(token.userId.toString())
+            val newToken = token.copy(
+                hashedAccessToken = newAccessToken
             )
-            saveTokens(tokenEntity)
-
-            return newAccessToken
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(e.message)
+            tokenRepository.save(newToken)
         }
+
+        refreshToken?.let {
+            if (!jwtUtils.validateRefreshToken(it)) {
+                throw IllegalArgumentException("Refresh token expired. Please log in again.")
+            }
+        }
+
+        val newAccessToken = jwtUtils.generateAccessToken(tokenData?.userId.toString())
+        val newRefreshToken = jwtUtils.generateRefreshToken(tokenData?.userId.toString())
+
+        val updatedToken = tokenData?.copy(
+            hashedAccessToken = newAccessToken,
+            hashedRefreshToken = newRefreshToken
+        )
+
+        updatedToken?.let {
+            tokenRepository.save(it)
+        }
+
+        return newAccessToken
+    }
+
+    @Transactional
+    override fun logout(jwt: String) {
+        val stringId = jwtUtils.getUserIdFromToken(jwt)
+        val userId = UUID.fromString(stringId)
+        tokenRepository.deleteByUserId(userId)
     }
 }

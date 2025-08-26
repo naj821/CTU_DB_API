@@ -10,6 +10,6 @@ interface TokenRepository: JpaRepository<TokenEntity, String>{
     fun existsByHashedAccessToken(refreshToken: String): Boolean
     fun findByHashedRefreshToken(accessToken: String): TokenEntity
     fun existsByUserId(userId: UUID): Boolean
-    fun findByHashedAccessToken(token: String): TokenEntity
+    fun findByHashedAccessToken(token: String): TokenEntity?
     fun deleteByUserId(userId: UUID): String
 }

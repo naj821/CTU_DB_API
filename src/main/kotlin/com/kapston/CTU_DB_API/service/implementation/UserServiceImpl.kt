@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.service.implementation
 
+import com.kapston.CTU_DB_API.CustomException.UserAlreadyExistsException
 import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
 import com.kapston.CTU_DB_API.domain.dto.request.LoginRequest
 import com.kapston.CTU_DB_API.domain.dto.request.RegisterRequest
@@ -22,7 +23,7 @@ class UserServiceImpl(
 
         val userExists = userRepo.existsByEmail(user.email)
 
-        if(userExists) throw IllegalStateException("Email already exists.")
+        if(userExists) throw UserAlreadyExistsException("Email already exists.")
 
         userRepo.save(user.toEntity())
 

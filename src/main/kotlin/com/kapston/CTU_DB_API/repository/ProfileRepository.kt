@@ -38,4 +38,13 @@ interface ProfileRepository: JpaRepository<ProfileEntity, UUID> {
     """
     )
     fun findByName(name: String): ProfileEntity?
+
+    @Query(
+        """
+        SELECT p
+        FROM ProfileEntity p
+        WHERE p.userEntity.role = 'TEACHER'
+    """
+    )
+    fun findAllTeachers(): List<ProfileEntity>
 }

@@ -36,10 +36,10 @@ class ProfileController(
     ): ResponseEntity<ProfileEntity?> {
         authenticationServiceImplementation.validateAccessToken(jwt)
         val stringId = jwtUtils.getUserIdFromToken(jwt)
-        val uuidId = UUID.fromString(stringId)
+        val userId = UUID.fromString(stringId)
 
-       val response =  profileService.getProfile(uuidId)
-
+        val user = userService.getUserEntity(userId)
+       val response =  profileService.getProfile(user)
         return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
@@ -93,4 +93,10 @@ class ProfileController(
             size
         )
     }
+
+//    @GetMapping
+//    fun getAllTeachers(): ResponseEntity<List<ProfileEntity>> {
+//        val teachers = profileService.getAllTeachers()
+//        return ResponseEntity.ok(teachers)
+//    }
 }
