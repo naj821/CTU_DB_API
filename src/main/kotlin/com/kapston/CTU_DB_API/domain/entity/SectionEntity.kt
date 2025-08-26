@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.domain.entity
 
+import com.kapston.CTU_DB_API.domain.dto.response.SectionResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -32,3 +33,12 @@ class SectionEntity(
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime? = null
 )
+
+{
+    fun toResponse(): SectionResponse = SectionResponse(
+        id = id!!,
+        name,
+        gradeLevel,
+        adviser = adviser
+    )
+}

@@ -25,39 +25,29 @@ class AuthenticationServiceImplementation(
         return
     }
 
-    override fun validateAccessToken(token: String): Unit {
-        val validToken = jwtUtils.validateAccessToken(token)
-        if(!validToken) throw IllegalArgumentException("Invalid token.2")
+    override fun validateAccessToken(token: String): Boolean {
+        return jwtUtils.validateAccessToken(token)
     }
 
     @Transactional
-    override fun refresh(jwt: String): String {
-        val tokenData = tokenRepository.findByHashedAccessToken(jwt)
-        val refreshToken = tokenData?.hashedRefreshToken
+    override fun refresh(userId: UUID): String {
+        val tokenData = tokenRepository.findByUserId(userId)
+            ?: throw UnauthorizedException("No token found for user.")
+        val refreshToken = tokenData.hashedRefreshToken
 
-        tokenData.takeIf { it != null }?.let { token ->
-            val newAccessToken = jwtUtils.generateAccessToken(token.userId.toString())
-            val newToken = token.copy(
-                hashedAccessToken = newAccessToken
-            )
-            tokenRepository.save(newToken)
+        if (!jwtUtils.validateRefreshToken(refreshToken)) {
+            throw IllegalArgumentException("Refresh token expired. Please log in again.")
         }
 
-        refreshToken?.let {
-            if (!jwtUtils.validateRefreshToken(it)) {
-                throw IllegalArgumentException("Refresh token expired. Please log in again.")
-            }
-        }
+        val newAccessToken = jwtUtils.generateAccessToken(tokenData.userId.toString())
+        val newRefreshToken = jwtUtils.generateRefreshToken(tokenData.userId.toString())
 
-        val newAccessToken = jwtUtils.generateAccessToken(tokenData?.userId.toString())
-        val newRefreshToken = jwtUtils.generateRefreshToken(tokenData?.userId.toString())
-
-        val updatedToken = tokenData?.copy(
+        val updatedToken = tokenData.copy(
             hashedAccessToken = newAccessToken,
             hashedRefreshToken = newRefreshToken
         )
 
-        updatedToken?.let {
+        updatedToken.let {
             tokenRepository.save(it)
         }
 

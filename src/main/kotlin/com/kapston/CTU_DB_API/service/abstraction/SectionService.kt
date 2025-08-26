@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.service.abstraction
 
+import com.kapston.CTU_DB_API.domain.dto.response.SectionResponse
 import com.kapston.CTU_DB_API.domain.entity.SectionEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -11,6 +12,7 @@ interface SectionService {
         gradeLevel: String?,
         name: String?,
         adviserName: String?,
-        pageable: Pageable
-    ): Page<SectionEntity>
+        page: Int,
+        size: Int
+    ): Page<SectionResponse>
 }

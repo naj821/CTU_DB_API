@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,10 +42,12 @@ class AuthController(
 
     @PostMapping("/refresh")
     fun refresh(
-        @CookieValue("jwt") jwt: String,
+//        @CookieValue("jwt") jwt: String,
+        @RequestParam(required = true) userId: String,
         response: HttpServletResponse
     ): ResponseEntity<String> {
-        val newAccessToken = authenticationService.refresh(jwt)
+        val idUser = UUID.fromString(userId)
+        val newAccessToken = authenticationService.refresh(idUser)
         val cookie = cookieUtils.createJwtCookie(newAccessToken)
         response.addCookie(cookie)
 
