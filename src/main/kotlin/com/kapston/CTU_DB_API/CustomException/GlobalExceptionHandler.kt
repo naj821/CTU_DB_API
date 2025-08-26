@@ -40,7 +40,7 @@ class GlobalExceptionHandler {
         val response = GlobalExceptionModel(
             ex.message ?: "Unexpected runtime error"
         )
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
     }
 
     @ExceptionHandler(SectionAlreadyExistsException::class)

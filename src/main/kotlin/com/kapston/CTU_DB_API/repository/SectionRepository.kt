@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.repository
 
+import com.kapston.CTU_DB_API.domain.dto.response.SectionResponse
 import com.kapston.CTU_DB_API.domain.entity.SectionEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -18,13 +19,13 @@ interface SectionRepository: JpaRepository<SectionEntity, UUID> {
     FROM SectionEntity s
     JOIN s.adviser p
     WHERE 
-      (:gradeLevel IS NULL OR s.gradeLevel = :gradeLevel)
-      AND (:name IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')))
+      (:gradeLevel IS NULL OR s.gradeLevel = CAST(:gradeLevel AS string))
+      AND (:name IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
       AND (
         :adviserName IS NULL OR
-        LOWER(p.firstName) LIKE LOWER(CONCAT('%', :adviserName, '%')) OR
-        LOWER(p.middleName) LIKE LOWER(CONCAT('%', :adviserName, '%')) OR
-        LOWER(p.lastName) LIKE LOWER(CONCAT('%', :adviserName, '%'))
+        LOWER(p.firstName) LIKE LOWER(CONCAT('%', CAST(:adviserName AS string), '%')) OR
+        LOWER(p.middleName) LIKE LOWER(CONCAT('%', CAST(:adviserName AS string), '%')) OR
+        LOWER(p.lastName) LIKE LOWER(CONCAT('%', CAST(:adviserName AS string), '%'))
       )
     """
     )
@@ -33,5 +34,5 @@ interface SectionRepository: JpaRepository<SectionEntity, UUID> {
         @Param("name") name: String?,
         @Param("adviserName") adviserName: String?,
         pageable: Pageable
-    ): Page<SectionEntity>
+    ): Page<SectionResponse>
 }

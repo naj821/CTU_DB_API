@@ -18,9 +18,9 @@ interface ProfileRepository: JpaRepository<ProfileEntity, UUID> {
     WHERE (:role IS NULL OR u.role = :role)
       AND (
         :name IS NULL OR
-        LOWER(p.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR
-        LOWER(p.middleName) LIKE LOWER(CONCAT('%', :name, '%')) OR
-        LOWER(p.lastName) LIKE LOWER(CONCAT('%', :name, '%'))
+        LOWER(p.firstName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')) OR
+        LOWER(p.middleName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')) OR
+        LOWER(p.lastName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%'))
       )
     """
     )
