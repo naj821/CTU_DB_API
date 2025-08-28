@@ -12,14 +12,14 @@ import java.util.*
 class SectionEntity(
 
     @Column(nullable = false, unique = true)
-    val name: String,
+    var name: String,
 
     @Column(name = "grade_level", nullable = false)
-    val gradeLevel: String,
+    var gradeLevel: String,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adviser_id", nullable = false, unique = true)
-    val adviser: ProfileEntity,
+    var adviser: ProfileEntity,
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,7 +31,7 @@ class SectionEntity(
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    val updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime? = null
 )
 
 {

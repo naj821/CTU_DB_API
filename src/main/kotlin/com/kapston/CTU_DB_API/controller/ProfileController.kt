@@ -93,10 +93,4 @@ class ProfileController(
             size
         )
     }
-
-//    @GetMapping
-//    fun getAllTeachers(): ResponseEntity<List<ProfileEntity>> {
-//        val teachers = profileService.getAllTeachers()
-//        return ResponseEntity.ok(teachers)
-//    }
 }
