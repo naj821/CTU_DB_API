@@ -36,6 +36,7 @@ class AuthenticationServiceImplementation(
         val refreshToken = tokenData.hashedRefreshToken
 
         if (!jwtUtils.validateRefreshToken(refreshToken)) {
+            tokenRepository.deleteByUserId(userId)
             throw IllegalArgumentException("Refresh token expired. Please log in again.")
         }
 
