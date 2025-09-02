@@ -24,24 +24,20 @@ class ProfileServiceImplementation(
     override fun saveOrUpdate(profileEntity: ProfileEntity): String {
         try {
             val existingProfile = profileRepository.findByUserEntity(profileEntity.userEntity)
-            val updateProfile = if(existingProfile != null) {
-                ProfileEntity(
-                    id = existingProfile.id,
-                    userEntity = existingProfile.userEntity,
-                    firstName = profileEntity.firstName.takeIf { !it.isNotBlank() } ?: existingProfile.firstName,
-                    middleName = profileEntity.middleName.takeIf { !it.isNullOrBlank() } ?: existingProfile.middleName,
-                    lastName = profileEntity.lastName.takeIf { !it.isNotBlank() } ?: existingProfile.lastName,
-                    gender = profileEntity.gender ?: existingProfile.gender,
-                    birthDate = profileEntity.birthDate ?: existingProfile.birthDate,
-                    contactNumber = profileEntity.contactNumber.takeIf { !it.isNullOrBlank() } ?: existingProfile.contactNumber,
-                    address = profileEntity.address.takeIf { !it.isNullOrBlank() } ?: existingProfile.address,
-                    createdAt = existingProfile.createdAt,
-                    updatedAt = LocalDateTime.now(),
-                )
-            } else {
-                profileEntity
-            }
-            profileRepository.save(updateProfile)
+
+            val updatedProfile = existingProfile.let {
+                it?.apply {
+                    firstName = profileEntity.firstName
+                    middleName = profileEntity.middleName
+                    lastName = profileEntity.lastName
+                    gender = profileEntity.gender
+                    birthDate = profileEntity.birthDate
+                    contactNumber = profileEntity.contactNumber
+                    address = profileEntity.address
+                }
+            } ?: profileEntity
+
+            profileRepository.save(updatedProfile)
 
             return "Profile saved."
         } catch (e: DataAccessException) {
