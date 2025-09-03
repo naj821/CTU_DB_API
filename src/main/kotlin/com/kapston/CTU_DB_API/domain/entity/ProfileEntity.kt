@@ -1,6 +1,7 @@
 package com.kapston.CTU_DB_API.domain.entity
 
 import com.kapston.CTU_DB_API.domain.Enums.Gender
+import com.kapston.CTU_DB_API.domain.dto.response.ProfileResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.CreationTimestamp
@@ -56,13 +57,16 @@ class ProfileEntity(
 )
 
 {
-    fun toResponse(): ProfileEntity = ProfileEntity(
+    fun toResponse(): ProfileResponse = ProfileResponse(
+        id,
         firstName,
         middleName,
         lastName,
         gender,
         birthDate,
         contactNumber,
-        address
+        address,
+        createdAt,
+        updatedAt
     )
 }

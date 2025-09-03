@@ -15,12 +15,6 @@ class AuthenticationServiceImplementation(
     private val tokenRepository: TokenRepository
 ): AuthenticationService {
     override fun saveTokens(token: TokenEntity): Unit {
-        val doesExist = tokenRepository.existsByUserId(
-            token.userId
-        )
-
-        if(doesExist) throw IllegalArgumentException("You are already logged in.")
-
         tokenRepository.save(token)
         return
     }

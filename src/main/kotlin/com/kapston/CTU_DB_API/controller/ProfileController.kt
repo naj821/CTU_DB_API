@@ -2,6 +2,7 @@ package com.kapston.CTU_DB_API.controller
 
 import com.kapston.CTU_DB_API.domain.Enums.Role
 import com.kapston.CTU_DB_API.domain.dto.request.ProfileRequest
+import com.kapston.CTU_DB_API.domain.dto.response.ProfileResponse
 import com.kapston.CTU_DB_API.domain.entity.ProfileEntity
 import com.kapston.CTU_DB_API.service.abstraction.ProfileService
 import com.kapston.CTU_DB_API.service.abstraction.UserService
@@ -33,7 +34,7 @@ class ProfileController(
     @GetMapping("/me")
     fun getProfiles(
         @CookieValue("jwt") jwt: String
-    ): ResponseEntity<ProfileEntity?> {
+    ): ResponseEntity<ProfileResponse?> {
         authenticationServiceImplementation.validateAccessToken(jwt)
         val stringId = jwtUtils.getUserIdFromToken(jwt)
         val userId = UUID.fromString(stringId)

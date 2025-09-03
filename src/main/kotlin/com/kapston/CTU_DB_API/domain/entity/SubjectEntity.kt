@@ -1,5 +1,6 @@
 package com.kapston.CTU_DB_API.domain.entity
 
+import com.kapston.CTU_DB_API.domain.dto.response.SubjectResponse
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -33,3 +34,12 @@ data class SubjectEntity(
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime? = null
 )
+{
+    fun toResponse(): SubjectResponse = SubjectResponse(
+        subjectCode,
+        name,
+        id,
+        createdAt,
+        updatedAt
+    )
+}

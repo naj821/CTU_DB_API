@@ -7,7 +7,7 @@ CREATE TABLE users (
     membership_code TEXT UNIQUE DEFAULT 'ASM-' || LPAD(nextval('membership_seq')::text, 4, '0'),
     role TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ
 );
 
 INSERT INTO users (email, password, membership_code, role)
@@ -29,7 +29,7 @@ CREATE TABLE profiles (
     contact_number TEXT,
     address TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ,
     UNIQUE(user_id)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE sections (
     grade_level TEXT NOT NULL,
     adviser_id UUID NOT NULL REFERENCES profiles(id),
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE subjects (
@@ -49,7 +49,7 @@ CREATE TABLE subjects (
     subject_code TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE teachers_subjects (
@@ -80,7 +80,7 @@ CREATE TABLE schedule (
     end_time TIMESTAMPTZ NOT NULL,
     created_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE grades (
