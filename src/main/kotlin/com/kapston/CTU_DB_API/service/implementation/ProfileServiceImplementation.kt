@@ -3,7 +3,7 @@ package com.kapston.CTU_DB_API.service.implementation
 import com.kapston.CTU_DB_API.CustomException.ProfileNotFoundException
 import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
 import com.kapston.CTU_DB_API.domain.Enums.Role
-import com.kapston.CTU_DB_API.domain.dto.request.ProfileRequest
+import com.kapston.CTU_DB_API.domain.dto.response.ProfileResponse
 import com.kapston.CTU_DB_API.domain.entity.ProfileEntity
 import com.kapston.CTU_DB_API.domain.entity.UserEntity
 import com.kapston.CTU_DB_API.repository.ProfileRepository
@@ -12,9 +12,6 @@ import org.springframework.dao.DataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
-import java.util.UUID
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ProfileServiceImplementation(
@@ -45,10 +42,11 @@ class ProfileServiceImplementation(
         }
     }
 
-    override fun getProfile(userEntity: UserEntity): ProfileEntity? {
-        return profileRepository.findByUserEntity(userEntity)
+    override fun getProfile(userEntity: UserEntity): ProfileResponse? {
+        val userResponse = profileRepository.findByUserEntity(userEntity)
             ?: throw ProfileNotFoundException("Profile not found for user id=${userEntity.id}")
 
+        return userResponse.toResponse()
     }
 
     override fun search(role: Role?, name: String?, page: Int, size: Int): Page<ProfileEntity> {
