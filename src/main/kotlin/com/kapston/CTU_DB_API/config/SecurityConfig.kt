@@ -53,6 +53,14 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/api/auth/session").permitAll()
+                    .requestMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                    ).permitAll()
 //                    .requestMatchers(HttpMethod.GET, "/api/profiles").permitAll()
                     .anyRequest().authenticated()
             }
