@@ -33,8 +33,6 @@ CREATE TABLE profiles (
     UNIQUE(user_id)
 );
 
-CREATE INDEX idx_profiles_user_id ON profiles(user_id);
-
 CREATE TABLE sections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL UNIQUE,
@@ -51,15 +49,6 @@ CREATE TABLE subjects (
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ
 );
-
-CREATE TABLE teachers_subjects (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    teacher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
-    UNIQUE(teacher_id, subject_id)
-);
-
-CREATE INDEX idx_teachers_subjects ON teachers_subjects(teacher_id, subject_id);
 
 CREATE TABLE class_enrollments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -78,7 +67,6 @@ CREATE TABLE schedule (
     section_id UUID NOT NULL REFERENCES sections(id) ON DELETE CASCADE,
     start_time TIMESTAMPTZ NOT NULL,
     end_time TIMESTAMPTZ NOT NULL,
-    created_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ
 );
@@ -91,6 +79,7 @@ CREATE TABLE grades (
     grade NUMERIC(5,2) NOT NULL CHECK (grade >= 0 AND grade <= 100),
     remarks TEXT,
     period TEXT,
+    feed_back TEXT,
     graded_at TIMESTAMPTZ DEFAULT now(),
     UNIQUE(student_id, subject_id, period)
 );
