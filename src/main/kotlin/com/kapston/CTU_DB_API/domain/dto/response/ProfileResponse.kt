@@ -14,6 +14,7 @@ data class ProfileResponse(
     val birthDate: LocalDate?,
     val contactNumber: String?,
     val address: String?,
+    val userResponse: UserResponse,
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )

@@ -66,6 +66,7 @@ class ProfileEntity(
         birthDate,
         contactNumber,
         address,
+        userEntity.toResponse(),
         createdAt,
         updatedAt
     )
