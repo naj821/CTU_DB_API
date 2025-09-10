@@ -27,14 +27,6 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
     }
 
-    @ExceptionHandler(RuntimeException::class)
-    fun handleRuntimeException(ex: RuntimeException): ResponseEntity<GlobalExceptionModel> {
-        val response = GlobalExceptionModel(
-            ex.message ?: "Unexpected runtime error"
-        )
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
-    }
-
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleRuntimeException(ex: IllegalArgumentException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(
@@ -57,5 +49,29 @@ class GlobalExceptionHandler {
             ex.message ?: "Unexpected runtime error"
         )
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    @ExceptionHandler(ScheduleConflictError::class)
+    fun handleScheduleConflict(ex: ScheduleConflictError): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
+    }
+
+    @ExceptionHandler(ScheduleSaveError::class)
+    fun handleInternalServerException(ex: ScheduleSaveError): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
+    }
+
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(ex: RuntimeException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
     }
 }
