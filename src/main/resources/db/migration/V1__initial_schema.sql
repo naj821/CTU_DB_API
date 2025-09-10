@@ -62,7 +62,7 @@ CREATE TABLE class_enrollments (
 
 CREATE TABLE schedule (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    teacher_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     subject_id UUID NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
     section_id UUID NOT NULL REFERENCES sections(id) ON DELETE CASCADE,
     start_time TIMESTAMPTZ NOT NULL,
