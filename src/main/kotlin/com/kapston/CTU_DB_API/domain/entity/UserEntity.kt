@@ -1,6 +1,7 @@
 package com.kapston.CTU_DB_API.domain.entity
 
 import com.kapston.CTU_DB_API.domain.Enums.Role
+import com.kapston.CTU_DB_API.domain.Enums.StatusEnum
 import com.kapston.CTU_DB_API.domain.dto.response.UserResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnTransformer
@@ -25,6 +26,9 @@ class UserEntity(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val role: Role = Role.STUDENT,
+
+    @Column(name = "status", nullable = false)
+    var status: StatusEnum = StatusEnum.ACTIVE,
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
