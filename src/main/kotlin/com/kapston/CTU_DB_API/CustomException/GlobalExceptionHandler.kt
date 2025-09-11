@@ -67,6 +67,14 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
     }
 
+    @ExceptionHandler(SectionNotFoundException::class)
+    fun handleSubjectNotFoundException(ex: SectionNotFoundException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(ex: RuntimeException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(

@@ -2,6 +2,7 @@ package com.kapston.CTU_DB_API.service.implementation
 
 import com.kapston.CTU_DB_API.CustomException.UserAlreadyExistsException
 import com.kapston.CTU_DB_API.CustomException.UserNotFoundException
+import com.kapston.CTU_DB_API.domain.Enums.StatusEnum
 import com.kapston.CTU_DB_API.domain.dto.request.LoginRequest
 import com.kapston.CTU_DB_API.domain.dto.request.RegisterRequest
 import com.kapston.CTU_DB_API.domain.dto.request.TokenRequest
@@ -58,5 +59,23 @@ class UserServiceImpl(
     override fun getUserEntity(id: UUID): UserEntity {
         return userRepo.findById(id)
             .orElseThrow { UserNotFoundException("No user found.") }
+    }
+
+    override fun updateStatus(id: UUID): String {
+        val user = userRepo.findById(id)
+            .orElseThrow { UserNotFoundException("It seems that this user does not exists.") }
+
+        val updatedStatus = when(user.status) {
+            StatusEnum.ACTIVE -> StatusEnum.INACTIVE
+            StatusEnum.INACTIVE -> StatusEnum.ACTIVE
+        }
+
+        val updatedUser = user.apply {
+            status = updatedStatus
+        }
+
+        userRepo.save(updatedUser)
+
+        return "User set to $updatedStatus"
     }
 }

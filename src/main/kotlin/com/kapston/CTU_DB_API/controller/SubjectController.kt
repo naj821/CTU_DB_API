@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/api/subjects")
@@ -58,5 +60,17 @@ class SubjectController(
         jwtUtils.validateAccessToken(jwt)
 
         return subjectService.search(subjectCode, name, page, size)
+    }
+
+    @DeleteMapping
+    fun delete(
+        @CookieValue("jwt") jwt: String,
+        @RequestParam(required = true) id: UUID
+    ): ResponseEntity<Unit> {
+        jwtUtils.validateAccessToken(jwt)
+
+        subjectService.delete(id)
+
+        return ResponseEntity.status(HttpStatus.OK).body(Unit)
     }
 }

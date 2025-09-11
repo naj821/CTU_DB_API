@@ -1,6 +1,7 @@
 package com.kapston.CTU_DB_API.service.implementation
 
 import com.kapston.CTU_DB_API.CustomException.SubjectAlreadyExists
+import com.kapston.CTU_DB_API.CustomException.SubjectNotFoundException
 import com.kapston.CTU_DB_API.domain.dto.request.SubjectRequest
 import com.kapston.CTU_DB_API.domain.dto.request.UpdateSubjectRequest
 import com.kapston.CTU_DB_API.domain.dto.response.SubjectResponse
@@ -9,6 +10,7 @@ import com.kapston.CTU_DB_API.service.abstraction.SubjectService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class SubjectServiceImplementation(
@@ -39,5 +41,12 @@ class SubjectServiceImplementation(
     override fun search(subjectCode: String?, name: String?, page: Int, size: Int): Page<SubjectResponse> {
         val pageable = PageRequest.of(page, size)
         return subjectRepository.search(subjectCode, name, pageable)
+    }
+
+    override fun delete(id: UUID) {
+        val subject = subjectRepository.findById(id)
+            .orElseThrow{ SubjectNotFoundException("Subject not found.") }
+
+        subjectRepository.delete(subject)
     }
 }
