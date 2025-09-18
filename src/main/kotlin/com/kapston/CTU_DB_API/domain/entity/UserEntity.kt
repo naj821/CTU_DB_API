@@ -27,6 +27,7 @@ class UserEntity(
     @Column(nullable = false)
     val role: Role = Role.STUDENT,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     var status: StatusEnum = StatusEnum.ACTIVE,
 
