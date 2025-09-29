@@ -19,7 +19,8 @@ import java.util.UUID
 @Service
 class UserServiceImpl(
     private val userRepo: UserRepository,
-    private val jwtUtils: JwtUtils): UserService {
+    private val jwtUtils: JwtUtils,
+    ): UserService {
     override fun create(user: RegisterRequest): String {
 
         val userExists = userRepo.existsByEmail(user.email)
@@ -77,5 +78,16 @@ class UserServiceImpl(
         userRepo.save(updatedUser)
 
         return "User set to $updatedStatus"
+    }
+
+    override fun resetPassword(id: UUID, newPassword: String): String {
+
+        val user = getUserEntity(id)
+
+        val updatedUser = user.apply {
+            password = newPassword
+        }
+        userRepo.save(updatedUser)
+        return "Password has been changed."
     }
 }

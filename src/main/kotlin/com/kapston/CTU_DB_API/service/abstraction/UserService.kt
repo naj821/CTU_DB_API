@@ -12,4 +12,5 @@ interface UserService {
     fun authenticate(user: LoginRequest): LoginResponse
     fun getUserEntity(id: UUID): UserEntity
     fun updateStatus(id: UUID): String
+    fun resetPassword(id: UUID, newPassword: String): String
 }

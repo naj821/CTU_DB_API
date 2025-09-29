@@ -75,6 +75,22 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
     }
 
+    @ExceptionHandler(OtpTooManyRequestException::class)
+    fun handleOtpTooManyRequestException(ex: OtpTooManyRequestException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    @ExceptionHandler(OtpInvalidException::class)
+    fun handleOtpInvalidException(ex: OtpInvalidException): ResponseEntity<GlobalExceptionModel> {
+        val response = GlobalExceptionModel(
+            ex.message ?: "Unexpected runtime error"
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(ex: RuntimeException): ResponseEntity<GlobalExceptionModel> {
         val response = GlobalExceptionModel(

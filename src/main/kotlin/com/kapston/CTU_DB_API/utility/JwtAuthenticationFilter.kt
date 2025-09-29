@@ -14,7 +14,22 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtAuthenticationFilter(
     private val authenticationService: AuthenticationService
-): OncePerRequestFilter() {
+) : OncePerRequestFilter() {
+
+    private val publicEndpoints = listOf(
+        "/api/auth/session",
+        "/api/otp/verification",
+        "/api/otp",
+        "/api/users/reset-password",
+        "/swagger-ui",
+        "/v3/api-docs"
+    )
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val uri = request.requestURI
+        return publicEndpoints.any { uri.startsWith(it) }
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -24,9 +39,9 @@ class JwtAuthenticationFilter(
             val jwt = extractJwtFromCookie(request)
 
             jwt
-                ?.takeIf {
-                    SecurityContextHolder.getContext().authentication == null }
-                ?.let { authenticationService.validateAccessToken(it)
+                ?.takeIf { SecurityContextHolder.getContext().authentication == null }
+                ?.let {
+                    authenticationService.validateAccessToken(it)
 
                     val authToken = UsernamePasswordAuthenticationToken(
                         it,
@@ -37,11 +52,11 @@ class JwtAuthenticationFilter(
                     authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
                     SecurityContextHolder.getContext().authentication = authToken
-
                 }
         } catch (e: UnauthorizedException) {
             throw e
         }
+
         filterChain.doFilter(request, response)
     }
 
