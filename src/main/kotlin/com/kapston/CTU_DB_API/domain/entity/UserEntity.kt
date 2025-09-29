@@ -15,10 +15,10 @@ import java.util.*
 class UserEntity(
 
     @Column(nullable = false, unique = true)
-    val email: String = "",
+    var email: String = "",
 
     @Column(nullable = false)
-    val password: String = "",
+    var password: String = "",
 
     @Column(name = "membership_code", insertable = false, updatable = false)
     val membershipCode: String? = null,

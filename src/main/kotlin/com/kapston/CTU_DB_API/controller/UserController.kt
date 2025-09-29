@@ -63,4 +63,20 @@ class UserController(
 
         return ResponseEntity.status(HttpStatus.OK).body(userResponse)
     }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(
+        @CookieValue("jwt") jwt: String,
+        @RequestParam(required = true) newPassword: String
+    ): ResponseEntity<String> {
+        jwtUtils.validateAccessToken(jwt)
+        val stringUserId = jwtUtils.getUserIdFromToken(jwt)
+        val userId = UUID.fromString(stringUserId)
+
+        val hashedPassword = newPassword.hashPassword()
+
+        val response = userService.resetPassword(userId, hashedPassword)
+
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
 }

@@ -53,6 +53,9 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "/api/auth/session").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/otp/verification").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/otp").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/users/reset-password").permitAll()
                     .requestMatchers(
                         "/swagger-ui/**",
                         "/swagger-ui.html",
